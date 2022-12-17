@@ -34,24 +34,24 @@ env:
 
 jobs:
   buildForAllPlatformsUbuntu:
-    name: Build for ${{ matrix.targetPlatform }} on version ${{ matrix.unityVersion }}
+    name: Build for ${{ matrix.targetPlatform }} #on version ${{ matrix.unityVersion }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        cloudRunnerCluster:
+        #cloudRunnerCluster:
           # - local-docker
-          - local
+          #- local
         projectPath:
           - test-project
-        unityVersion:
-          - 2019.2.11f1
-          - 2019.3.15f1
+        #unityVersion:
+        #  - 2019.2.11f1
+        #  - 2019.3.15f1
         targetPlatform:
-          - StandaloneOSX # Build a macOS standalone (Intel 64-bit).
+          #- StandaloneOSX # Build a macOS standalone (Intel 64-bit).
           - StandaloneWindows64 # Build a Windows 64-bit standalone.
-          - StandaloneLinux64 # Build a Linux 64-bit standalone.
-          - iOS # Build an iOS player.
+          #- StandaloneLinux64 # Build a Linux 64-bit standalone.
+          #- iOS # Build an iOS player.
           - Android # Build an Android .apk.
           - WebGL # WebGL.
           #          - StandaloneWindows # Build a Windows standalone.
@@ -85,16 +85,16 @@ jobs:
       - uses: ./
         with:
           projectPath: ${{ matrix.projectPath }}
-          unityVersion: ${{ matrix.unityVersion }}
+          #unityVersion: ${{ matrix.unityVersion }}
           targetPlatform: ${{ matrix.targetPlatform }}
-          customParameters: -profile SomeProfile -someBoolean -someValue exampleValue
-          cloudRunnerCluster: ${{ matrix.cloudRunnerCluster }}
+          #customParameters: -profile SomeProfile -someBoolean -someValue exampleValue
+          #cloudRunnerCluster: ${{ matrix.cloudRunnerCluster }}
 
       ###########################
       #          Upload         #
       ###########################
       - uses: actions/upload-artifact@v2
         with:
-          name: Build Ubuntu (${{ matrix.unityVersion }})
-          path: build
+          name: Build (${{ matrix.targetPlatform }})
+          path: build/${{ matrix.targetPlatform }}
           retention-days: 14
