@@ -21,7 +21,7 @@ jobs:
           #- local
         projectPath:
           - test-project
-        unityVersion:
+        #unityVersion:
         #  - 2021.3.15f1
         #  - 2019.2.11f1
         #  - 2019.3.15f1
