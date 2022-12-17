@@ -76,3 +76,10 @@ jobs:
           name: Build (${{ matrix.targetPlatform }})
           path: build/${{ matrix.targetPlatform }}
           retention-days: 14
+          
+      - uses: Difegue/action-megacmd@master
+        with:
+          args: put -c build /Unity_projects/${{ matrix.projectName }}/
+        env:
+          USERNAME: ${{ secrets.MEGA_USERNAME }}
+          PASSWORD: ${{ secrets.MEGA_PASSWORD }}
