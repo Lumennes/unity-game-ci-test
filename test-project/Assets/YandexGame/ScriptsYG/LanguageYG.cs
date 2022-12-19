@@ -26,7 +26,7 @@ namespace YG
 
         private void Awake()
         {
-            // Р Р°СЃРєРѕРјРјРµРЅС‚РёСЂСѓР№С‚Рµ РЅРёР¶РЅСЋСЋ СЃС‚СЂРѕРєСѓ, РµСЃР»Рё РІС‹ РїРѕР»СѓС‡Р°РµС‚Рµ РєР°РєРёРµ-Р»РёР±Рѕ РѕС€РёР±РєРё СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ InfoYG. Р’ РєР°РєРёС… С‚Рѕ СЃР»СѓС‡Р°СЏС…, СЌС‚Рѕ РјРѕР¶РµС‚ РїРѕРјРѕС‡СЊ.
+            // Раскомментируйте нижнюю строку, если вы получаете какие-либо ошибки связанные с InfoYG. В каких то случаях, это может помочь.
             // Uncomment the bottom line if you get any errors related to infoYG. In some cases, it may help.
             //Serialize();
 
@@ -222,7 +222,7 @@ namespace YG
                 text = textMeshComponent.text;
             else
             {
-                Debug.LogError("(ruРЎРѕРѕР±С‰РµРЅРёРµ)РўРµРєСЃС‚ РґР»СЏ РїРµСЂРµРІРѕРґР° РЅРµ РЅР°Р№РґРµРЅ!\n(enMessage)The text for translation was not found!");
+                Debug.LogError("(ruСообщение)Текст для перевода не найден!\n(enMessage)The text for translation was not found!");
                 return null;
             }
 
@@ -247,7 +247,7 @@ namespace YG
                 StopAllCoroutines();
                 processTranslateLabel = processTranslateLabel + " error";
 
-                Debug.LogError("(ruРЎРѕРѕР±С‰РµРЅРёРµ) РџСЂРѕС†РµСЃСЃ РЅРµ Р·Р°РІРµСЂС€С‘РЅ! Р’РµСЂРѕСЏС‚РЅРѕ, Р’С‹ РґРµР»Р°Р»Рё СЃР»РёС€РєРѕРј РјРЅРѕРіРѕ Р·Р°РїСЂРѕСЃРѕРІ. Р’ С‚Р°РєРѕРј СЃР»СѓС‡Р°Рµ, API Google Translate Р±Р»РѕРєРёСЂСѓРµС‚ РґРѕСЃС‚СѓРї Рє РїРµСЂРµРІРѕРґСѓ РЅР° РЅРµРєРѕС‚РѕСЂРѕРµ РІСЂРµРјСЏ.  РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РїРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ. РќРµ РїРµСЂРµРІРѕРґРёС‚Рµ С‚РµРєСЃС‚ СЃР»РёС€РєРѕРј С‡Р°СЃС‚Рѕ, С‡С‚РѕР±С‹ Google РЅРµ РїРѕСЃС‡РёС‚Р°Р» Р’Р°С€Рё РґРµР№СЃС‚РІРёСЏ Р·Р° СЃРїР°Рј" +
+                Debug.LogError("(ruСообщение) Процесс не завершён! Вероятно, Вы делали слишком много запросов. В таком случае, API Google Translate блокирует доступ к переводу на некоторое время.  Пожалуйста, попробуйте позже. Не переводите текст слишком часто, чтобы Google не посчитал Ваши действия за спам" +
                             "\n" + "(enMessage) The process is not completed! Most likely, you made too many requests. In this case, the Google Translate API blocks access to the translation for a while.  Please try again later. Do not translate the text too often, so that Google does not consider your actions as spam");
             }
 

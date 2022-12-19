@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Runtime.InteropServices;
 using UnityEngine.Events;
 using System;
@@ -1250,7 +1250,7 @@ namespace YG
         {
             EnvironmentData.reviewCanShow = false;
 
-            bool sent = feedbackSent == "true" ? true : false;
+            bool sent = feedbackSent == "true";
             ReviewSentEvent?.Invoke(sent);
             if (sent) ReviewDo?.Invoke();
         }
@@ -1275,9 +1275,12 @@ namespace YG
         #region Update
         int delayFirstCalls = -1;
         static float timerShowAd;
+#if !UNITY_EDITOR
         static float timerSaveCloud = 62;
+#endif
 
-        private void Update()
+
+    private void Update()
         {
             // Таймер для обработки показа Fillscreen рекламы
             timerShowAd += Time.unscaledDeltaTime;
@@ -1298,7 +1301,7 @@ namespace YG
         }
 #endregion Update
 
-        #region Json
+#region Json
         public class JsonAuth
         {
             public string playerAuth;
@@ -1342,7 +1345,7 @@ namespace YG
             public string[] priceValue;
             public int[] purchased;
         }
-        #endregion Json
+#endregion Json
     }
 
     public class Purchase
