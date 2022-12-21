@@ -80,17 +80,20 @@ namespace Completed
     //This is called each time a scene is loaded.
     static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-      if (instance.isGameOver)
+      if (instance)
       {
-        print("isGameOver: " + instance.isGameOver);
-        instance.level = 0;
-        instance.playerFoodPoints = 100;
-        instance.isGameOver = false;
-        instance.enabled = true;
-      }
+        if (instance.isGameOver)
+        {
+          print("isGameOver: " + instance.isGameOver);
+          instance.level = 0;
+          instance.playerFoodPoints = 100;
+          instance.isGameOver = false;
+          instance.enabled = true;
+        }
 
-      instance.level++;
-      instance.InitGame();
+        instance.level++;
+        instance.InitGame();
+      }
     }
 
 
