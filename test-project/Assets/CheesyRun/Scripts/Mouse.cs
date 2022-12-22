@@ -43,7 +43,7 @@ namespace CheesyRun
       //  GetComponent<AudioSource>().Play();
       //}
 
-      //if (!GetComponent<AudioYB>().isPlaying)
+      if (!audioYB.isPlaying)
       {
         //GetComponent<AudioYB>().clip = JumpSoundName;
         audioYB.Play(JumpSoundName);
@@ -52,7 +52,7 @@ namespace CheesyRun
 
     public void CheeseSoundPlay()
     {
-      //if (!audio.isPlaying)
+      if (!audioYB.isPlaying)
       {
         //GetComponent<AudioSource>().clip = CheeseSound[Random.Range(0, CheeseSound.Length - 1)];
         //GetComponent<AudioSource>().Play();
@@ -64,7 +64,7 @@ namespace CheesyRun
 
     public void EnemySoundPlay()
     {
-      //if (!audio.isPlaying)
+      if (!audioYB.isPlaying)
       {
         //GetComponent<AudioSource>().clip = EnemySound;
         //GetComponent<AudioSource>().Play();
@@ -76,7 +76,7 @@ namespace CheesyRun
 
     public void TrapSoundPlay()
     {
-      //if (!audio.isPlaying)
+      if (!audioYB.isPlaying)
       {
         //GetComponent<AudioSource>().clip = TrapSound;
         //GetComponent<AudioSource>().Play();

@@ -6,13 +6,14 @@ public class PlayMusic : MonoBehaviour
 {
   AudioYB audioYB;
   public string mainMenuSound;
+  public bool loop = true;
 
   // Start is called before the first frame update
   void Start()
   {
     audioYB = GetComponent<AudioYB>();
     audioYB.Play(mainMenuSound);
-    audioYB.loop = true;
+    audioYB.loop = loop;
   }
 
   //private void OnApplicationPause(bool pause)
