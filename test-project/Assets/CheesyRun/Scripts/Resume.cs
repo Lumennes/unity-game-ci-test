@@ -10,7 +10,7 @@ namespace CheesyRun
     public GameObject pauseBtn;
     public bool rewarded;
 
-    bool close;
+    bool rew;
 
     // Подписываемся на событие открытия рекламы в OnEnable
     private void OnEnable()
@@ -18,7 +18,7 @@ namespace CheesyRun
       if (rewarded)
       {
         YandexGame.RewardVideoEvent += Rewarded;
-        //YandexGame.CloseVideoEvent += CloseVideoEvent;
+        YandexGame.CloseVideoEvent += CloseVideoEvent;
       }
     }
 
@@ -28,27 +28,36 @@ namespace CheesyRun
       if (rewarded)
       {
         YandexGame.RewardVideoEvent -= Rewarded;
-        //YandexGame.CloseVideoEvent -= CloseVideoEvent;
+        YandexGame.CloseVideoEvent -= CloseVideoEvent;
       }
     }
 
-    //void CloseVideoEvent()
-    //{
-    //  close = true;
-
-    //  //print("CloseVideoEvent");
+    void CloseVideoEvent()
+    {
+      //close = true;
+      if (rew)
+      {
+        GameObject.FindObjectOfType<GameManager>().SetTime();
+        ResumeGame();
+      }
+      print("CloseVideoEvent");
       
-    //}
+    }
 
     // Подписанный метод получения награды
     void Rewarded(int id)
     {
-      //print("Rewarded");
+      rew = true;
+
+      //ResumeGame();
+
+      print("Rewarded");
+
+      //rew = true;
 
       //if (close)
       {
-        GameObject.FindObjectOfType<GameManager>().SetTime();
-        ResumeGame();
+
         //close = false;
       }
 
@@ -70,6 +79,8 @@ namespace CheesyRun
     void OnMouseUp()
     {
       transform.localScale = new Vector3(1, 1, 1);
+
+      //ResumeGame();
 
       if (rewarded)
         YandexGame.RewVideoShow(0);

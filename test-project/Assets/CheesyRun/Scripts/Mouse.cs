@@ -122,9 +122,9 @@ namespace CheesyRun
       if (col.CompareTag("Enemy"))
       {
         SaveScore();
-        YandexGame.FullscreenShow();
+        
         Time.timeScale = 0;
-
+        YandexGame.FullscreenShow();
         //YandexGame.FullscreenShow();
 
         EnemySoundPlay();
@@ -139,9 +139,9 @@ namespace CheesyRun
       else if (col.CompareTag("Trap"))
       {
         SaveScore();
-        YandexGame.FullscreenShow();
+        
         Time.timeScale = 0;
-
+        YandexGame.FullscreenShow();
         //YandexGame.FullscreenShow();
 
         TrapSoundPlay();
