@@ -79,7 +79,7 @@ jobs:
           
       - uses: Difegue/action-megacmd@master
         with:
-          args: put -c build /Unity_projects/${{ matrix.projectName }}/
+          args: put -c build/${{ matrix.targetPlatform }} /Unity_projects/DungeonRalms/
         env:
           USERNAME: ${{ secrets.MEGA_USERNAME }}
           PASSWORD: ${{ secrets.MEGA_PASSWORD }}

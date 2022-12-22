@@ -42,6 +42,18 @@ namespace CheesyRun
       //inGameSound.clip = inGameSoundName;
       //inGameSound.Play(inGameSoundName);
       //inGameSound.loop = true;
+
+      InvokeRepeating(nameof(SaveScore), 5, 5);
+    }
+
+    public void SaveScore()
+    {
+      if (score > YandexGame.savesData.maxScore)
+      {
+        YandexGame.NewLeaderboardScores("score", (int)score);
+        YandexGame.savesData.maxScore = (int)score;
+        YandexGame.SaveProgress();
+      }
     }
 
     //private void OnApplicationPause(bool pause)

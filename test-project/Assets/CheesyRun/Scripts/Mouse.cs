@@ -93,6 +93,8 @@ namespace CheesyRun
       anim = GetComponent<Animator>();
       audioYB = GetComponent<AudioYB>();
       rb = GetComponent<Rigidbody2D>();
+
+      
     }
 
     public void TimesUp()
@@ -107,21 +109,13 @@ namespace CheesyRun
       GameOverMenu.SetActive(true);
     }
 
-    void SaveScore()
-    {
-      if (gm.score > YandexGame.savesData.maxScore)
-      {
-        YandexGame.NewLeaderboardScores("score", (int)gm.score);
-        YandexGame.savesData.maxScore = (int)gm.score;
-        YandexGame.SaveProgress();
-      }
-    }
+    
 
     void OnTriggerEnter2D(Collider2D col)
     {     
       if (col.CompareTag("Enemy"))
       {
-        SaveScore();
+
         
         Time.timeScale = 0;
         YandexGame.FullscreenShow();
@@ -138,7 +132,6 @@ namespace CheesyRun
       }
       else if (col.CompareTag("Trap"))
       {
-        SaveScore();
         
         Time.timeScale = 0;
         YandexGame.FullscreenShow();
@@ -163,7 +156,6 @@ namespace CheesyRun
 
       if (col.CompareTag("Cheese"))
       {
-        SaveScore();
         CheeseSoundPlay();
         Destroy(col.gameObject);
         gm.SetTime();
@@ -189,7 +181,6 @@ namespace CheesyRun
     {
       if (col.CompareTag("Ground"))
       {
-        SaveScore();
         canJump = true;
         canJump2 = true;
         anim.Play("Mouse_Run");
