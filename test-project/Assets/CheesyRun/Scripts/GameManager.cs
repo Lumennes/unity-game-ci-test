@@ -124,14 +124,14 @@ namespace CheesyRun
           AudioListener.volume = 0;
           //PlayerPrefs.SetInt("Mute", 1);
           YandexGame.savesData.mute = true;
-          audioImage.sprite = audioOn;
+          audioImage.sprite = audioOff;
         }
         else
         {
           AudioListener.volume = 1;
           //PlayerPrefs.SetInt("Mute", 0);
           YandexGame.savesData.mute = false;
-          audioImage.sprite = audioOff;
+          audioImage.sprite = audioOn;
         }
 
         YandexGame.SaveProgress();
