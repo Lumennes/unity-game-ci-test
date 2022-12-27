@@ -5,8 +5,9 @@ using TMPro;
 using YG;
 
 public class BestScore : MonoBehaviour
-{  
-  [SerializeField] TMP_Text text;
+{
+  [SerializeField] GameObject bestScoreText;
+  [SerializeField] TMP_Text scoreText;
 
   private void OnEnable()
   {
@@ -27,7 +28,8 @@ public class BestScore : MonoBehaviour
 
   void GetLoad()
   {
-    text.text = YandexGame.savesData.maxScore.ToString();
+    bestScoreText.SetActive(true);
+    scoreText.text = YandexGame.savesData.maxScore.ToString();
   }
 
     // Update is called once per frame
