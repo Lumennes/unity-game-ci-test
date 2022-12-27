@@ -284,7 +284,7 @@ namespace YG
       {
         string urlOrig = GetURLFromPage();
 
-        string localhost = "http://localhost";
+        string localhost = "https://localhost";
         if (urlOrig.Remove(localhost.Length) != localhost)
         {
           string plaedLinks = urlOrig.Remove(0, 15);

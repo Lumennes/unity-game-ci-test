@@ -39,10 +39,10 @@ namespace CheesyRun
       //close = true;
       if (rew)
       {
-        GameObject.FindObjectOfType<GameManager>().SetTime();
+        FindObjectOfType<GameManager>().SetTime();
         ResumeGame();
       }
-      //print("CloseVideoEvent");
+      print("CloseVideoEvent");
       
     }
 
@@ -53,7 +53,7 @@ namespace CheesyRun
 
       //ResumeGame();
 
-      //print("Rewarded");
+      print("Rewarded");
 
       //rew = true;
 
@@ -92,6 +92,8 @@ namespace CheesyRun
 
     void ResumeGame()
     {
+      print("ResumeGame");
+
       Time.timeScale = 1;
 
       pauseBtn.SetActive(true);

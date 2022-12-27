@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 using YG.Example;
 using YG;
+using UnityEngine.UI;
+using TMPro;
 
 namespace CheesyRun
 {
@@ -11,14 +13,22 @@ namespace CheesyRun
     public GameObject[] enemy;
     public GameObject[] cheese;
 
-    public TextMesh scoreText;
+    public TMP_Text scoreText;
     public Transform timeBar;
     public float increaseSpeed;
+    public Slider timeBarSlider;
 
     public float score;
     public TextMesh GameOverScoreText;
 
     private float lastTime;
+
+    public GameObject pauseMenu;
+    public GameObject pauseBtn;
+
+    public Sprite audioOn;
+    public Sprite audioOff;
+    public Image audioImage;
 
     //public int heartId = -1;
     //public bool chestLocked;
@@ -30,6 +40,11 @@ namespace CheesyRun
 
     //public AudioYB inGameSound;
     //public string inGameSoundName;
+
+    private void OnEnable() => YandexGame.GetDataEvent += GetLoad;
+
+    // Отписываемся от события GetDataEvent в OnDisable
+    private void OnDisable() => YandexGame.GetDataEvent -= GetLoad;
 
     void Start()
     {
@@ -44,6 +59,35 @@ namespace CheesyRun
       //inGameSound.loop = true;
 
       InvokeRepeating(nameof(SaveScore), 5, 5);
+
+      // Проверяем запустился ли плагин
+      if (YandexGame.SDKEnabled == true)
+      {
+        // Если запустился, то запускаем Ваш метод для загрузки
+        GetLoad();
+
+        // Если плагин еще не прогрузился, то метод не запуститься в методе Start,
+        // но он запустится при вызове события GetDataEvent, после прогрузки плагина
+      }
+    }
+
+    public void GetLoad()
+    {
+      // Получаем данные из плагина и делаем с ними что хотим
+      // Например, мы хотил записать в компонент UI.Text сколько у игрока монет:
+      //sp = GetComponent<SpriteRenderer>();
+
+      //if (PlayerPrefs.GetInt("Mute", 0) == 1)
+      if (YandexGame.savesData.mute)
+      {
+        AudioListener.volume = 0;
+        audioImage.sprite = audioOff;
+      }
+      else
+      {
+        AudioListener.volume = 1;
+        audioImage.sprite = audioOn;
+      }
     }
 
     public void SaveScore()
@@ -56,6 +100,40 @@ namespace CheesyRun
 
         YandexGame.NewLeaderboardScores("LeaderBoard", intScore);
         YandexGame.savesData.maxScore = intScore;
+        YandexGame.SaveProgress();
+      }
+    }
+
+    public void Pause()
+    {
+      if (Time.timeScale > 0)
+      {
+        Time.timeScale = 0;
+
+        pauseMenu.SetActive(true);
+        pauseBtn.SetActive(false);
+      }
+    }
+
+    public void Audio()
+    {
+      if (YandexGame.Instance)
+      {
+        if (!YandexGame.savesData.mute)
+        {
+          AudioListener.volume = 0;
+          //PlayerPrefs.SetInt("Mute", 1);
+          YandexGame.savesData.mute = true;
+          audioImage.sprite = audioOn;
+        }
+        else
+        {
+          AudioListener.volume = 1;
+          //PlayerPrefs.SetInt("Mute", 0);
+          YandexGame.savesData.mute = false;
+          audioImage.sprite = audioOff;
+        }
+
         YandexGame.SaveProgress();
       }
     }
@@ -77,7 +155,8 @@ namespace CheesyRun
 
     public void SetTime()
     {
-      lastTime = Time.time;
+      //lastTime = Time.time;
+      timeBarSlider.value = 1;
     }
 
     void LateUpdate()
@@ -89,16 +168,21 @@ namespace CheesyRun
         scoreText.text = ((int)score).ToString();
         GameOverScoreText.text = ((int)score).ToString();
 
-        timeBar.localScale = new Vector2((40 - (Time.time - lastTime)) / 40, 1.8f);
-
-        if (timeBar.localScale.x < 0.01f)
-        {
-          mouse.TimesUp();
-        }
+        
 
         increaseSpeed = score / 100000;
         if (increaseSpeed >= 0.15f)
           increaseSpeed = 0.15f;
+
+        timeBarSlider.value -= increaseSpeed / 100;//Time.time - lastTime;
+
+        // timeBar.localScale = new Vector2((40 - (Time.time - lastTime)) / 40, 1.8f);
+
+        //if (timeBar.localScale.x < 0.01f)
+        if (timeBarSlider.value < 0.01f)
+        {
+          mouse.TimesUp();
+        }
       }
     }
 
