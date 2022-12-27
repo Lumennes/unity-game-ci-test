@@ -34,6 +34,10 @@ namespace CheesyRun
     AudioYB audioYB;
 
     Rigidbody2D rb;
+     
+    [SerializeField] GameObject jumpButton;
+    [SerializeField] GameObject pauseButton;
+    [SerializeField] GameObject timeBar;
 
     public void JumpSoundPlay()
     {
@@ -92,13 +96,20 @@ namespace CheesyRun
       canJump2 = true;
       anim = GetComponent<Animator>();
       audioYB = GetComponent<AudioYB>();
-      rb = GetComponent<Rigidbody2D>();
+      rb = GetComponent<Rigidbody2D>();      
+    }
 
-      
+    public void Resume()
+    {
+      jumpButton.SetActive(true);
+      pauseButton.SetActive(true);
+      timeBar.SetActive(true);
     }
 
     public void TimesUp()
     {
+      gm.SaveScore();
+
       Time.timeScale = 0;
       EnemySoundPlay();
 
@@ -107,6 +118,10 @@ namespace CheesyRun
       EnemyMenu.SetActive(false);
       chestsMenu.SetActive(true);
       GameOverMenu.SetActive(true);
+
+      jumpButton.SetActive(false);
+      pauseButton.SetActive(false);
+      timeBar.SetActive(false);
     }
 
     
@@ -115,11 +130,14 @@ namespace CheesyRun
     {     
       if (col.CompareTag("Enemy"))
       {
+        gm.SaveScore();
 
-        
         Time.timeScale = 0;
-        YandexGame.FullscreenShow();
-        //YandexGame.FullscreenShow();
+
+        if(YandexGame.Instance)
+          YandexGame.FullscreenShow();
+
+
 
         EnemySoundPlay();
         col.enabled = false;
@@ -129,13 +147,19 @@ namespace CheesyRun
         EnemyMenu.SetActive(true);
         chestsMenu.SetActive(true);
         GameOverMenu.SetActive(true);
+
+        jumpButton.SetActive(false);
+        pauseButton.SetActive(false);
+        timeBar.SetActive(false);
       }
       else if (col.CompareTag("Trap"))
       {
-        
+        gm.SaveScore();
+
         Time.timeScale = 0;
-        YandexGame.FullscreenShow();
-        //YandexGame.FullscreenShow();
+
+        if (YandexGame.Instance)
+          YandexGame.FullscreenShow();
 
         TrapSoundPlay();
         col.enabled = false;
@@ -145,6 +169,10 @@ namespace CheesyRun
         EnemyMenu.SetActive(false);
         chestsMenu.SetActive(true);
         GameOverMenu.SetActive(true);
+
+        jumpButton.SetActive(false);
+        pauseButton.SetActive(false);
+        timeBar.SetActive(false);
       }
 
       //		if (col.tag == "Enemy"
@@ -156,6 +184,8 @@ namespace CheesyRun
 
       if (col.CompareTag("Cheese"))
       {
+        gm.SaveScore();
+
         CheeseSoundPlay();
         Destroy(col.gameObject);
         gm.SetTime();

@@ -12,16 +12,24 @@ public class AudioStreamCash : MonoBehaviour
 {
   public bool Cash;
   public bool DinamicCash = true;
+
   public List<Clip> infoList = new List<Clip>();
   public AudioClip this[int index] => infoList[index].Cash;
   AudioClip[] infoListUnity;
+
   static AudioStreamCash instance;
+
   private void Awake()
   {
-    if (instance == null) instance = this; else Destroy(gameObject);
+    if (instance == null)
+      instance = this;
+    else
+      Destroy(gameObject);
+
 #if UNITY_EDITOR
     Listen();
 #endif
+
 #if !UNITY_EDITOR
      
        foreach (var item in infoList)
@@ -29,17 +37,21 @@ public class AudioStreamCash : MonoBehaviour
             item.ClearCash();
         }
 #endif
-    if (Cash) LoadCash();
 
+    if (Cash)
+      LoadCash();
   }
   private void Start()
-  {
-    DontDestroyOnLoad(gameObject);
+  {    
     LoadLIstUnity();
+
+    if (instance == this && Application.isPlaying)
+      DontDestroyOnLoad(gameObject);
   }
   private void Listen()
   {
     infoList.Clear();
+
     LoadExt("mp3", AudioType.MPEG);
     LoadExt("wav", AudioType.WAV);
     LoadExt("ogg", AudioType.OGGVORBIS);
@@ -47,32 +59,37 @@ public class AudioStreamCash : MonoBehaviour
   void LoadLIstUnity()
   {
     infoListUnity = Resources.LoadAll<AudioClip>("");
-    foreach (var item in infoListUnity) infoList.Add(new Clip(item, true));
-
+    foreach (var item in infoListUnity)
+      infoList.Add(new Clip(item, true));
   }
 
   void LoadExt(string ext, AudioType type)
   {
-    DirectoryInfo dir = new DirectoryInfo(Application.streamingAssetsPath);
+    DirectoryInfo dir = new (Application.streamingAssetsPath);
     FileInfo[] info = dir.GetFiles("*." + ext);
     foreach (var item in info)
     {
       if (Regex.IsMatch(item.Name, @"\p{IsCyrillic}"))
-      {
-        Debug.LogError($"Переиминуй   {item.Name}");
-      }
+        Debug.LogError($"Переиминуй {item.Name}");
+
       infoList.Add(new Clip(Application.streamingAssetsPath, item.Name, ext, type, Cash || DinamicCash));
-
     }
-
   }
+
   void LoadCash()
   {
     foreach (var item in infoList)
       StartCoroutine(item.GetFile());
   }
-  public static Clip Find(string name) => instance.infoList.Find(x => x.Name == name);
+
+  public static Clip Find(string name)
+  {
+    if(instance)
+      return instance.infoList.Find(x => x.Name == name);
+    return null;
+  }
 }
+
 [Serializable]
 public class Clip
 {
@@ -95,17 +112,17 @@ public class Clip
     Cashing = cash;
     UnityFile = false;
   }
+
   public Clip(AudioClip audio, bool cash)
   {
     Cashing = cash;
     UnityFile = true;
     Cash = audio;
     name = audio.name;
-
   }
+
   public IEnumerator GetFile(Action<AudioClip> action = null)
   {
-
     if (UnityFile || IsCashing)
     {
       action?.Invoke(Cash);
@@ -127,9 +144,7 @@ public class Clip
       }
       action?.Invoke(cash);
     }
-
   }
-
 
   public void ClearCash()
   {

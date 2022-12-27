@@ -37,7 +37,7 @@ namespace CheesyRun
       SetTime();
       //		CreateEnemy();
       Instantiate(enemy[Random.Range(0, enemy.Length - 1)], new Vector3(13, -2.58f, 0), Quaternion.identity);
-      InvokeRepeating("CreateEnemy", 1, 3);
+      InvokeRepeating(nameof(CreateEnemy), 1, 3);
 
       //inGameSound.clip = inGameSoundName;
       //inGameSound.Play(inGameSoundName);
@@ -48,10 +48,14 @@ namespace CheesyRun
 
     public void SaveScore()
     {
-      if (score > YandexGame.savesData.maxScore)
+      var intScore = (int)score;
+
+      if (YandexGame.Instance && intScore > YandexGame.savesData.maxScore)
       {
-        YandexGame.NewLeaderboardScores("score", (int)score);
-        YandexGame.savesData.maxScore = (int)score;
+        //print($"SaveScore: {Time.realtimeSinceStartup} - score: {score} - maxScore: {YandexGame.savesData.maxScore}");
+
+        YandexGame.NewLeaderboardScores("LeaderBoard", intScore);
+        YandexGame.savesData.maxScore = intScore;
         YandexGame.SaveProgress();
       }
     }

@@ -10,6 +10,8 @@ namespace CheesyRun
     public GameObject pauseBtn;
     public bool rewarded;
 
+    public Mouse mouse;
+
     bool rew;
 
     // Подписываемся на событие открытия рекламы в OnEnable
@@ -82,7 +84,7 @@ namespace CheesyRun
 
       //ResumeGame();
 
-      if (rewarded)
+      if (YandexGame.Instance && rewarded)
         YandexGame.RewVideoShow(0);
       else
         ResumeGame();
@@ -94,6 +96,8 @@ namespace CheesyRun
 
       pauseBtn.SetActive(true);
       pauseMenu.SetActive(false);
+
+      if (mouse) mouse.Resume();
     }
   }
 }
