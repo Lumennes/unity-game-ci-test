@@ -17,7 +17,7 @@ public class AudioStreamCash : MonoBehaviour
   public AudioClip this[int index] => infoList[index].Cash;
   AudioClip[] infoListUnity;
 
-  static AudioStreamCash instance;
+  public static AudioStreamCash instance;
 
   private void Awake()
   {

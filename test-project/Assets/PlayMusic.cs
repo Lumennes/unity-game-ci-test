@@ -12,8 +12,12 @@ public class PlayMusic : MonoBehaviour
   void Start()
   {
     audioYB = GetComponent<AudioYB>();
-    audioYB.Play(mainMenuSound);
-    audioYB.loop = loop;
+
+    if (AudioStreamCash.instance && audioYB)
+    {
+      audioYB.Play(mainMenuSound);
+      audioYB.loop = loop;
+    }
   }
 
   //private void OnApplicationPause(bool pause)

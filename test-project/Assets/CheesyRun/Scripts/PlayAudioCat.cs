@@ -17,7 +17,11 @@ namespace CheesyRun
     {
       //GetComponent<AudioSource>().Play();
       //GetComponent<AudioYB>().clip = AudioCatName;
-      audioYB.Play(AudioCatName);
+
+      if (AudioStreamCash.instance && audioYB && !audioYB.isPlaying)
+      {
+        audioYB.Play(AudioCatName);
+      }
     }
 
     //private void OnApplicationPause(bool pause)
