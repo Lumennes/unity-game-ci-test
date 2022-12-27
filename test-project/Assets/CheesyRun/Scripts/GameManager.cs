@@ -166,9 +166,7 @@ namespace CheesyRun
         score += 0.5f;
 
         scoreText.text = ((int)score).ToString();
-        GameOverScoreText.text = ((int)score).ToString();
-
-        
+        GameOverScoreText.text = ((int)score).ToString();        
 
         increaseSpeed = score / 100000;
         if (increaseSpeed >= 0.15f)
