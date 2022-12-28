@@ -18,6 +18,8 @@ namespace Completed
 
 
     private Text levelText;                 //Text to display current level number.
+    private Text maxLevelText;
+    private GameObject maxLevel;
     private GameObject levelImage;              //Image to block out level as levels are being set up, background for levelText.
     private BoardManager boardScript;           //Store a reference to our BoardManager which will set up the level.
     private int level = 0;                  //Current level number, expressed in game as "Day 1".
@@ -28,9 +30,25 @@ namespace Completed
     public float restartGameDelay;
     bool isGameOver;
 
+    // Подписываемся на событие GetDataEvent в OnEnable
+    private void OnEnable() => YandexGame.GetDataEvent += GetLoad;
+
+    // Отписываемся от события GetDataEvent в OnDisable
+    private void OnDisable() => YandexGame.GetDataEvent -= GetLoad;
+
+    public string lang;
+
     //Awake is always called before any Start functions
     void Awake()
     {
+      //if (!string.IsNullOrEmpty(lang))
+      //  YandexGame.savesData.language = lang;
+
+      //if (!YandexGame.Instance)
+      //  GetLoad();
+
+      //print(YandexGame.savesData.language);
+
       //Check if instance already exists
       if (instance == null)
 
@@ -52,10 +70,32 @@ namespace Completed
       //Get a component reference to the attached BoardManager script
       boardScript = GetComponent<BoardManager>();
 
-      level++;
+      level++;      
 
       //Call the InitGame function to initialize the first level 
       InitGame();
+    }
+
+    // Ваш метод для загрузки, который будет запускаться в старте
+    public void GetLoad()
+    {
+      // Получаем данные из плагина и делаем с ними что хотим
+      // Например, мы хотил записать в компонент UI.Text сколько у игрока монет:
+      //textMoney.text = YandexGame.savesData.money.ToString();
+
+      if (!string.IsNullOrEmpty(lang))
+        YandexGame.savesData.language = lang;
+
+      /* if(!maxLevel) */
+      maxLevel = GameObject.Find("MaxLevel");
+     /* if(maxLevel && !maxLevelText) */maxLevelText = maxLevel.GetComponent<Text>();
+
+      maxLevelText.text = YandexGame.savesData.language switch
+      {
+        "ru" => "твой рекорд " + YandexGame.savesData.maxLevel + " дней",//Set the foodText to reflect the current player food total.
+        "tr" => "rekorun " + YandexGame.savesData.maxLevel + " gündür",//Set the foodText to reflect the current player food total.
+        _ => "your record is " + YandexGame.savesData.maxLevel + " days",//Set the foodText to reflect the current player food total.
+      };
     }
 
     //this is called only once, and the paramter tell it to be called only after the scene was loaded
@@ -84,7 +124,7 @@ namespace Completed
       {
         if (instance.isGameOver)
         {
-          print("isGameOver: " + instance.isGameOver);
+          //print("isGameOver: " + instance.isGameOver);
           instance.level = 0;
           instance.playerFoodPoints = 100;
           instance.isGameOver = false;
@@ -109,23 +149,16 @@ namespace Completed
       //Get a reference to our text LevelText's text component by finding it by name and calling GetComponent.
       levelText = GameObject.Find("LevelText").GetComponent<Text>();
 
+      //YandexGame.savesData.language = "tr";
+
       //Set the text of levelText to the string "Day" and append the current level number.
       //levelText.text = "Day " + level;
-      switch (YandexGame.savesData.language)
+      levelText.text = YandexGame.savesData.language switch
       {
-        case "ru":
-          //Set the foodText to reflect the current player food total.
-          levelText.text = "День " + level;
-          break;
-        case "en":
-          //Set the foodText to reflect the current player food total.
-          levelText.text = "Day " + level;
-          break;
-        case "tr":
-          //Set the foodText to reflect the current player food total.
-          levelText.text = "Gün " + level;
-          break;
-      }
+        "ru" => "День " + level,//Set the foodText to reflect the current player food total.
+        "tr" => "Gün " + level,//Set the foodText to reflect the current player food total.
+        _ => "Day " + level,//Set the foodText to reflect the current player food total.
+      };
 
       //Set levelImage to active blocking player's view of the game board during setup.
       levelImage.SetActive(true);
@@ -139,6 +172,15 @@ namespace Completed
       //Call the SetupScene function of the BoardManager script, pass it current level number.
       boardScript.SetupScene(level);
 
+      // Проверяем запустился ли плагин
+      if (YandexGame.SDKEnabled == true)
+      {
+        // Если запустился, то запускаем Ваш метод для загрузки
+        GetLoad();
+
+        // Если плагин еще не прогрузился, то метод не запуститься в методе Start,
+        // но он запустится при вызове события GetDataEvent, после прогрузки плагина
+      }
     }
 
 
@@ -173,37 +215,36 @@ namespace Completed
     }
 
 
+    public void SaveScore(bool isGameOver)
+    {
+      var tempLevel = isGameOver ? level - 1 : level;
+
+      // если уровень больше сохранённого максимального уровня
+      if (YandexGame.Instance && tempLevel > YandexGame.savesData.maxLevel)
+      {
+        //print("maxLevel: " + YandexGame.savesData.maxLevel + " | level: " + level);
+        YandexGame.NewLeaderboardScores("LeaderBoard", tempLevel); // сохраняем текущий уровень в лидерборде
+        YandexGame.savesData.maxLevel = tempLevel; // сохраняем текущий уровень в сохранении как максимальный
+        YandexGame.SaveProgress(); // сохраняем прогресс
+        //GetLoad();
+      }
+    }
+
     //GameOver is called when the player reaches 0 food points
     public void GameOver()
     {
-      // если уровень больше сохранённого максимального уровня
-      if(level > YandexGame.savesData.maxLevel)
-      {
-        print("maxLevel: " + YandexGame.savesData.maxLevel + " | level: " + level);
-        YandexGame.NewLeaderboardScores("leaderboard", level); // сохраняем текущий уровень в лидерборде
-        YandexGame.savesData.maxLevel = level; // сохраняем текущий уровень в сохранении как максимальный
-        YandexGame.SaveProgress(); // сохраняем прогресс
-      }
+      SaveScore(true); 
 
       YandexGame.FullscreenShow(); // показываем рекламу
 
       //Set levelText to display number of levels passed and game over message
       //levelText.text = "After " + level + " days, you starved.";
-      switch (YandexGame.savesData.language)
+      levelText.text = YandexGame.savesData.language switch
       {
-        case "ru":
-          //Set the foodText to reflect the current player food total.
-          levelText.text = "Через " + level + " дней вы проголодались.";
-          break;
-        case "en":
-          //Set the foodText to reflect the current player food total.
-          levelText.text = "After " + level + " days, you starved.";
-          break;
-        case "tr":
-          //Set the foodText to reflect the current player food total.
-          levelText.text = level + " Gün sonra açlıktan öldün.";
-          break;
-      }
+        "ru" => "Через " + level + " дней\nвы проголодались.",//Set the foodText to reflect the current player food total.
+        "tr" => level + " Gün sonra açlıktan\nöldün.",//Set the foodText to reflect the current player food total.
+        _ => "After " + level + " days,\nyou starved.",//Set the foodText to reflect the current player food total.
+      };
 
       //Enable black background image gameObject.
       levelImage.SetActive(true);

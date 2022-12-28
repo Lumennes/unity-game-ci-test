@@ -88,6 +88,11 @@ public class FirstGameManager : MonoBehaviour
     }
   }
 
+  public void Auth()
+  {
+
+  }
+
   // Update is called once per frame
   //void Update()
   //{

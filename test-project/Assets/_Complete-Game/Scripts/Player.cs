@@ -41,21 +41,12 @@ namespace Completed
       //Get the current food point total stored in GameManager.instance between levels.
       food = GameManager.instance.playerFoodPoints;
 
-      switch (YandexGame.savesData.language)
+      foodText.text = YandexGame.savesData.language switch
       {
-        case "ru":
-          //Set the foodText to reflect the current player food total.
-          foodText.text = "Еда: " + food;
-          break;
-        case "en":
-          //Set the foodText to reflect the current player food total.
-          foodText.text = "Food: " + food;
-          break;
-        case "tr":
-          //Set the foodText to reflect the current player food total.
-          foodText.text = "Yemek: " + food;
-          break;
-      }
+        "ru" => "Еда: " + food,//Set the foodText to reflect the current player food total.
+        "tr" => "Yemek: " + food,//Set the foodText to reflect the current player food total.
+        _ => "Food: " + food,//Set the foodText to reflect the current player food total.
+      };
 
       //if(YandexGame.EnvironmentData.deviceType == "desktop")
 
@@ -166,21 +157,12 @@ namespace Completed
 
       //Update food text display to reflect current score.
       //foodText.text = "Food: " + food;
-      switch (YandexGame.savesData.language)
+      foodText.text = YandexGame.savesData.language switch
       {
-        case "ru":
-          //Set the foodText to reflect the current player food total.
-          foodText.text = "Еда: " + food;
-          break;
-        case "en":
-          //Set the foodText to reflect the current player food total.
-          foodText.text = "Food: " + food;
-          break;
-        case "tr":
-          //Set the foodText to reflect the current player food total.
-          foodText.text = "Yemek: " + food;
-          break;
-      }
+        "ru" => "Еда: " + food,//Set the foodText to reflect the current player food total.
+        "tr" => "Yemek: " + food,//Set the foodText to reflect the current player food total.
+        _ => "Food: " + food,//Set the foodText to reflect the current player food total.
+      };
 
       //Call the AttemptMove method of the base class, passing in the component T (in this case Wall) and x and y direction to move.
       base.AttemptMove<T>(xDir, yDir);
@@ -191,7 +173,7 @@ namespace Completed
       if (!Move(xDir, yDir, out RaycastHit2D hit))
       {
         //Call RandomizeSfx of SoundManager to play the move sound, passing in two audio clips to choose from.
-        SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
+        SoundManager.instance.RandomizeSfxNames(moveSound1.name, moveSound2.name);
       }
 
       //Since the player has moved and lost food points, check if the game has ended.
@@ -223,12 +205,15 @@ namespace Completed
       //Check if the tag of the trigger collided with is Exit.
       if (other.CompareTag("Exit"))
       {
-        print("Exit");
+        //print("Exit");
 
         //Disable the player object since level is over.
         enabled = false;
 
-        YandexGame.FullscreenShow();        
+        GameManager.instance.SaveScore(false);
+
+        if(YandexGame.Instance)
+          YandexGame.FullscreenShow();        
 
         //Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
         Invoke(nameof(Restart), restartLevelDelay);
@@ -242,24 +227,15 @@ namespace Completed
 
         //Update foodText to represent current total and notify player that they gained points
         //foodText.text = "+" + pointsPerFood + " Food: " + food;
-        switch (YandexGame.savesData.language)
+        foodText.text = YandexGame.savesData.language switch
         {
-          case "ru":
-            //Set the foodText to reflect the current player food total.
-            foodText.text = "+" + pointsPerFood + " Еда: " + food;
-            break;
-          case "en":
-            //Set the foodText to reflect the current player food total.
-            foodText.text = "+" + pointsPerFood + " Food: " + food;
-            break;
-          case "tr":
-            //Set the foodText to reflect the current player food total.
-            foodText.text = "+" + pointsPerFood + " Yemek: " + food;
-            break;
-        }
+          "ru" => "+" + pointsPerFood + " Еда: " + food,//Set the foodText to reflect the current player food total.
+          "tr" => "+" + pointsPerFood + " Yemek: " + food,//Set the foodText to reflect the current player food total.
+          _ => "+" + pointsPerFood + " Food: " + food,//Set the foodText to reflect the current player food total.
+        };
 
         //Call the RandomizeSfx function of SoundManager and pass in two eating sounds to choose between to play the eating sound effect.
-        SoundManager.instance.RandomizeSfx(eatSound1, eatSound2);
+        SoundManager.instance.RandomizeSfxNames(eatSound1.name, eatSound2.name);
 
         //Disable the food object the player collided with.
         other.gameObject.SetActive(false);
@@ -273,24 +249,15 @@ namespace Completed
 
         //Update foodText to represent current total and notify player that they gained points
         //foodText.text = "+" + pointsPerSoda + " Food: " + food;
-        switch (YandexGame.savesData.language)
+        foodText.text = YandexGame.savesData.language switch
         {
-          case "ru":
-            //Set the foodText to reflect the current player food total.
-            foodText.text = "+" + pointsPerSoda + " Еда: " + food;
-            break;
-          case "en":
-            //Set the foodText to reflect the current player food total.
-            foodText.text = "+" + pointsPerSoda + " Food: " + food;
-            break;
-          case "tr":
-            //Set the foodText to reflect the current player food total.
-            foodText.text = "+" + pointsPerSoda + " Yemek: " + food;
-            break;
-        }
+          "ru" => "+" + pointsPerSoda + " Еда: " + food,//Set the foodText to reflect the current player food total.
+          "tr" => "+" + pointsPerSoda + " Yemek: " + food,//Set the foodText to reflect the current player food total.
+          _ => "+" + pointsPerSoda + " Food: " + food,//Set the foodText to reflect the current player food total.
+        };
 
         //Call the RandomizeSfx function of SoundManager and pass in two drinking sounds to choose between to play the drinking sound effect.
-        SoundManager.instance.RandomizeSfx(drinkSound1, drinkSound2);
+        SoundManager.instance.RandomizeSfxNames(drinkSound1.name, drinkSound2.name);
 
         //Disable the soda object the player collided with.
         other.gameObject.SetActive(false);
@@ -320,21 +287,12 @@ namespace Completed
 
       //Update the food display with the new total.
       //foodText.text = "-" + loss + " Food: " + food;
-      switch (YandexGame.savesData.language)
+      foodText.text = YandexGame.savesData.language switch
       {
-        case "ru":
-          //Set the foodText to reflect the current player food total.
-          foodText.text = "-" + loss + " Еда: " + food;
-          break;
-        case "en":
-          //Set the foodText to reflect the current player food total.
-          foodText.text = "-" + loss + " Food: " + food;
-          break;
-        case "tr":
-          //Set the foodText to reflect the current player food total.
-          foodText.text = "-" + loss + " Yemek: " + food;
-          break;
-      }
+        "ru" => "-" + loss + " Еда: " + food,//Set the foodText to reflect the current player food total.
+        "tr" => "-" + loss + " Yemek: " + food,//Set the foodText to reflect the current player food total.
+        _ => "-" + loss + " Food: " + food,//Set the foodText to reflect the current player food total.
+      };
 
       //Check to see if game has ended.
       CheckIfGameOver();
@@ -350,7 +308,7 @@ namespace Completed
         enabled = false;
 
         //Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
-        SoundManager.instance.PlaySingle(gameOverSound);
+        SoundManager.instance.PlaySingleName(gameOverSound.name);
 
         //Stop the background music.
         //SoundManager.instance.musicSource.Stop();
