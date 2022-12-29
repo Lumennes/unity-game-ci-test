@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.IO;
 using System.Reflection;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 public class EditorTools
 {
-	public static float titleSize
+	public static float TitleSize
 	{
 		get{return 66f;}
 	}
@@ -61,7 +61,7 @@ public class EditorTools
 		string path = EditorUtility.OpenFilePanel("Load As", "", "prefab");
 		if(string.IsNullOrEmpty(path))return null;
 		//Debug.Log(path);
-		path = path.Substring(path.IndexOf("Assets"));
+		path = path[path.IndexOf("Assets")..];
 		//Debug.Log(path);
 		GameObject assetObj = AssetDatabase.LoadAssetAtPath(path,typeof(GameObject)) as GameObject;
 		if(assetObj != null)
@@ -77,10 +77,12 @@ public class EditorTools
 		string path = EditorUtility.SaveFilePanelInProject("Save As", name + ".prefab", "prefab", "Save as...");
 		if(!string.IsNullOrEmpty(path))
 		{
-			GameObject go = new GameObject();
-			go.name = name;
-			go.AddComponent<T>();
-			PrefabUtility.CreatePrefab(path,go);
+      GameObject go = new()
+      {
+        name = name
+      };
+      go.AddComponent<T>();
+			PrefabUtility.SaveAsPrefabAsset(go, path, out _);
 			Object.DestroyImmediate(go);
 			return AssetDatabase.LoadAssetAtPath(path,typeof(T)) as T;
 		}
@@ -100,7 +102,7 @@ public class EditorTools
 
 	static public List<T> GetPrefabsFromAssets <T> (bool isJustOne,string saveID) where T:Component
 	{
-		List<T> prefabs = new List<T> ();
+		List<T> prefabs = new();
 		string[] paths = AssetDatabase.GetAllAssetPaths();
 		for(int i = 0; i < paths.Length; i++)
 		{
@@ -137,7 +139,7 @@ public class EditorTools
 		startID = startID < 0?0:startID;
 		GUILayout.BeginHorizontal(options);
 
-		string[] showTagNames = new string[0];
+		string[] showTagNames;
 		bool allShow = false;
 
 		if(tagNames.Length <= showTagCount)
@@ -184,8 +186,7 @@ public class EditorTools
 		for (int i = 0; i < showTagNames.Length; i++)
 		{
 			bool click = false;
-			bool curClick = false;
-			if(selectID == i + startID)
+      if (selectID == i + startID)
 				click = true;
 
 			GUIStyle thisButtonStyle = EditorStyles.miniButtonMid;
@@ -204,9 +205,9 @@ public class EditorTools
 				}
 			}
 
-			curClick = GUILayout.Toggle (click,showTagNames[i],thisButtonStyle,GUILayout.Height(18));
+      bool curClick = GUILayout.Toggle(click, showTagNames[i], thisButtonStyle, GUILayout.Height(18));
 
-			if(!click && curClick)
+      if (!click && curClick)
 			{
 				if(i + startID < tagNames.Length)
 					curSelectID = i + startID;
@@ -231,9 +232,8 @@ public class EditorTools
 
 	public static float Slider (string name,float sliderValue,float leftValue,float rightValue,bool isHorizontal)
 	{
-		float curValue = 0;
-
-		if(!isHorizontal)
+    float curValue;
+    if (!isHorizontal)
 		{
 			GUILayout.BeginVertical();
 			GUILayout.Label(name + leftValue + " ~ " + rightValue,EditorStyles.miniLabel);
@@ -301,7 +301,7 @@ public class EditorTools
 	public static int IntField (string fieldName,int curValue,int minValue,int maxValue,params GUILayoutOption[] options)
 	{
 		GUILayout.BeginHorizontal ();
-		GUILayout.Label (fieldName,GUILayout.Width (titleSize));
+		GUILayout.Label (fieldName,GUILayout.Width (TitleSize));
 		int setValue = EditorGUILayout.IntField (curValue,options);
 		GUILayout.EndHorizontal ();
 		if(minValue != 0 || maxValue != 0)
@@ -320,7 +320,7 @@ public class EditorTools
 	public static float FloatField (string fieldName,float curValue,float minValue,float maxValue,params GUILayoutOption[] options)
 	{
 		GUILayout.BeginHorizontal ();
-		GUILayout.Label (fieldName,GUILayout.Width (titleSize));
+		GUILayout.Label (fieldName,GUILayout.Width (TitleSize));
 		float setValue = EditorGUILayout.FloatField (curValue,options);
 		GUILayout.EndHorizontal ();
 		if(minValue != 0 || maxValue != 0)
@@ -334,7 +334,7 @@ public class EditorTools
 	public static bool Toggle (string toggleName,bool curValue,params GUILayoutOption[] options)
 	{
 		GUILayout.BeginHorizontal ();
-		GUILayout.Label (toggleName,GUILayout.Width (titleSize));
+		GUILayout.Label (toggleName,GUILayout.Width (TitleSize));
 		curValue = EditorGUILayout.Toggle (curValue,options);
 		GUILayout.EndHorizontal ();
 		return curValue;
@@ -343,7 +343,7 @@ public class EditorTools
 	public static Object ObjectField(string fieldName,Object obj,System.Type objType,params GUILayoutOption[] options)
 	{
 		GUILayout.BeginHorizontal ();
-		GUILayout.Label (fieldName,GUILayout.Width (titleSize));
+		GUILayout.Label (fieldName,GUILayout.Width (TitleSize));
 		obj = EditorGUILayout.ObjectField (obj,objType,false,options);
 		GUILayout.EndHorizontal ();
 		return obj;

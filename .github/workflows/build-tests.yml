@@ -79,7 +79,7 @@ jobs:
           
       - uses: Difegue/action-megacmd@master
         with:
-          args: put -c build/${{ matrix.targetPlatform }} /Unity_projects/StalkerVsZombie/
+          args: put -c build/${{ matrix.targetPlatform }} /Unity_projects/InvectorWebGLMobileTesting/
         env:
           USERNAME: ${{ secrets.MEGA_USERNAME }}
           PASSWORD: ${{ secrets.MEGA_PASSWORD }}
