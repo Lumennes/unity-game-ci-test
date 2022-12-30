@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -74,13 +74,11 @@ public abstract partial class BaseGameService : MonoBehaviour
         onServiceFinish.Invoke();
         if (result.Success)
         {
-            if (onSuccess != null)
-                onSuccess(result);
+            onSuccess?.Invoke(result);
         }
         else
         {
-            if (onError != null)
-                onError(result.error);
+            onError?.Invoke(result.error);
         }
     }
 

@@ -79,7 +79,7 @@ jobs:
           
       - uses: Difegue/action-megacmd@master
         with:
-          args: put -c build/${{ matrix.targetPlatform }} /Unity_projects/InvectorWebGLMobileTesting/2/
+          args: put -c build/${{ matrix.targetPlatform }} /Unity_projects/InvectorWebGLMobileTesting/3/
         env:
           USERNAME: ${{ secrets.MEGA_USERNAME }}
           PASSWORD: ${{ secrets.MEGA_PASSWORD }}

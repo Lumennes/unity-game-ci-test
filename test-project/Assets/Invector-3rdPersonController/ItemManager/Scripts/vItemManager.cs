@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -798,8 +798,7 @@ namespace Invector.vItemManager
                 {
                     equipment.transform.parent = parent;
                 }
-                equipment.transform.position = position;
-                equipment.transform.rotation = rotation;
+                equipment.transform.SetPositionAndRotation(position, rotation);
                 equipment.OnEquip(item);
                 return equipment;
             }
